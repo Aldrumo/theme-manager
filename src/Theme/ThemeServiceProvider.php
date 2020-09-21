@@ -21,7 +21,7 @@ class ThemeServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             'theme:' . $themeName,
-            function() use ($theme) {
+            function () use ($theme) {
                 return new $theme($this);
             }
         );

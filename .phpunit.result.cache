@@ -1,1 +1,1 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":157:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:1:{s:97:"Aldrumo\ThemeManager\Tests\Providers\ThemeManagerServiceProviderTest::theme_manager_is_registered";d:0.056;}}}
+C:37:"PHPUnit\Runner\DefaultTestResultCache":157:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:1:{s:97:"Aldrumo\ThemeManager\Tests\Providers\ThemeManagerServiceProviderTest::theme_manager_is_registered";d:0.048;}}}

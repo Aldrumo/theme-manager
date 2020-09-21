@@ -30,6 +30,6 @@ class ThemeManagerServerProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        //
     }
 }
