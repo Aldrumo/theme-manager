@@ -11,20 +11,17 @@ use Aldrumo\ThemeManager\ThemeManager;
 
 class ThemeManagerTest extends TestCase
 {
-    protected function getPackageProviders($app)
+    protected function bootThemes()
     {
-        $providers = parent::getPackageProviders($app);
-
-        // in app, theme service providers should be autoloaded via composer
-        $providers[] = DefaultThemeServiceProvider::class;
-        $providers[] = AnotherThemeServiceProvider::class;
-
-        return $providers;
+        app()->register(DefaultThemeServiceProvider::class);
+        app()->register(AnotherThemeServiceProvider::class);
     }
 
     /** @test */
     public function active_theme_is_set()
     {
+        $this->bootThemes();
+
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
         $this->assertInstanceOf(
@@ -36,6 +33,8 @@ class ThemeManagerTest extends TestCase
     /** @test */
     public function active_theme_is_throws_exception_when_not_set()
     {
+        $this->bootThemes();
+
         $this->expectException(ActiveThemeNotSetException::class);
 
         app(ThemeManager::class)->activeTheme();
@@ -44,6 +43,8 @@ class ThemeManagerTest extends TestCase
     /** @test */
     public function active_theme_is_throws_exception_when_invalid_theme_set()
     {
+        $this->bootThemes();
+
         $this->expectException(ThemeNotFoundException::class);
 
         app(ThemeManager::class)->activeTheme('ThemeDoesNotExist');
@@ -52,6 +53,8 @@ class ThemeManagerTest extends TestCase
     /** @test */
     public function can_get_list_of_available_themes()
     {
+        $this->bootThemes();
+
         $themes = app(ThemeManager::class)->availableThemes();
 
         $this->assertEquals(
@@ -61,5 +64,13 @@ class ThemeManagerTest extends TestCase
             ],
             $themes->toArray()
         );
+    }
+
+    /** @test */
+    public function can_get_empty_list_when_no_theme_set()
+    {
+        $themes = app(ThemeManager::class)->availableThemes();
+
+        $this->assertEmpty($themes->toArray());
     }
 }
