@@ -1,8 +1,7 @@
 <?php
 
-namespace Aldrumo\ThemeManager\Tests\Providers;
+namespace Aldrumo\ThemeManager\Tests;
 
-use Aldrumo\ThemeManager\Tests\TestCase;
 use Aldrumo\ThemeManager\ThemeManager;
 
 class ThemeManagerServiceProviderTest extends TestCase

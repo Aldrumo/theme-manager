@@ -25,6 +25,7 @@ class ThemeServiceProvider extends ServiceProvider
                 return new $theme($this);
             }
         );
+        $this->app->tag('theme:' . $themeName, ['aldrumo-theme']);
     }
 
     /**
