@@ -13,7 +13,7 @@
         "php": "^7.2.5",
         "aldrumo/theme-installer": "~1.0",
         "illuminate/support": "^8.0",
-        "aldrumo/support": "~0.4"
+        "aldrumo/support": "0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
