@@ -35,5 +35,12 @@
             "./vendor/bin/phpunit",
             "./vendor/bin/phpcs --standard=PSR2 src"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aldrumo\\ThemeManager\\ThemeManagerServerProvider",
+            ]
+        }
     }
 }
