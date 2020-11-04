@@ -2,4 +2,3 @@ composer.phar
 /vendor/
 .idea
 .phpunit.result.cache
-composer.lock
