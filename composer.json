@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.3",
         "aldrumo/theme-installer": "~1.0",
         "illuminate/support": "^8.0",
         "aldrumo/support": "0.*"
