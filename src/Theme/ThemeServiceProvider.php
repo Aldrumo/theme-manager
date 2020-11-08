@@ -41,4 +41,13 @@ class ThemeServiceProvider extends ServiceProvider
             $path => resource_path('views/vendor/' . $themeName),
         ], $themeName . '-views');
     }
+
+    /**
+     * @param array $paths
+     * @param null $groups
+     */
+    public function setPublishes(array $paths, $groups = null)
+    {
+        $this->publishes($paths, $groups);
+    }
 }
