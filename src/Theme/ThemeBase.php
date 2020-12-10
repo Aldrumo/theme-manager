@@ -6,6 +6,7 @@ use Aldrumo\Support\Traits\CanGetPackageName;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 
 abstract class ThemeBase
 {
@@ -66,7 +67,13 @@ abstract class ThemeBase
     {
         $theme = $this->packageName();
 
-        collect(File::allFiles($path))
+        try {
+            $files = File::allFiles($path);
+        } catch (DirectoryNotFoundException $e) {
+            return;
+        }
+
+        collect($files)
             ->each(
                 function ($item) use ($theme) {
                     $view = (string) Str::of($item->getRelativePathname())
