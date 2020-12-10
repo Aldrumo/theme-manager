@@ -15,7 +15,7 @@ abstract class ThemeBase
     protected $serviceProvider;
 
     /** @var string */
-    protected $viewsPath = '/../resources/views';
+    protected $viewsPath = '/../resources/views/templates';
 
     /** @var Collection */
     protected $availableViews;
