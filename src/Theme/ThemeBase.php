@@ -16,7 +16,10 @@ abstract class ThemeBase
     protected $serviceProvider;
 
     /** @var string */
-    protected $viewsPath = '/../resources/views/templates';
+    protected $viewsPath = '/../resources/views';
+
+    /** @var string */
+    protected $templatesFolder = '/templates';
 
     /** @var Collection */
     protected $availableViews;
@@ -44,13 +47,16 @@ abstract class ThemeBase
     public function boot() : void
     {
         $this->serviceProvider->setViews($this->getPath() . $this->viewsPath);
+        $this->serviceProvider->setViews($this->getPath() . $this->viewsPath . $this->templatesFolder);
     }
 
     public function availableViews() : Collection
     {
         if ($this->availableViews === null) {
             $this->availableViews = collect([]);
-            $this->getViews($this->getPath() . $this->viewsPath);
+            $this->getViews(
+                $this->getPath() . $this->viewsPath . $this->templatesFolder
+            );
         }
 
         return $this->availableViews;
