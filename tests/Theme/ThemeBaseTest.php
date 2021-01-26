@@ -30,10 +30,10 @@ class ThemeBaseTest extends TestCase
 
         $this->assertEquals(
             [
-                "DefaultTheme::Content.left-col" => "Content.left-col",
-                "DefaultTheme::Content.right-col" => "Content.right-col",
-                "DefaultTheme::Foo.Bar.contact" => "Foo.Bar.contact",
-                "DefaultTheme::home" => "home"
+                "Content.left-col" => "Content.left-col",
+                "Content.right-col" => "Content.right-col",
+                "Foo.Bar.contact" => "Foo.Bar.contact",
+                "home" => "home"
             ],
             $views->toArray()
         );

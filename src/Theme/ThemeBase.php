@@ -71,8 +71,6 @@ abstract class ThemeBase
 
     protected function getViews($path)
     {
-        $theme = $this->packageName();
-
         try {
             $files = File::allFiles($path);
         } catch (DirectoryNotFoundException $e) {
@@ -81,14 +79,12 @@ abstract class ThemeBase
 
         collect($files)
             ->each(
-                function ($item) use ($theme) {
+                function ($item) {
                     $view = (string) Str::of($item->getRelativePathname())
                         ->replace('.blade.php', '')
                         ->replace('/', '.');
 
-                    $key = $theme . '::' . $view;
-
-                    $this->availableViews->put($key, $view);
+                    $this->availableViews->push($view);
                 }
             );
     }
