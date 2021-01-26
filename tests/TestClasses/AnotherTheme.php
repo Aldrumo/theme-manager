@@ -8,4 +8,7 @@ class AnotherTheme extends ThemeBase
 {
     /** @var string */
     protected $viewsPath = '/../TestViews';
+
+    /** @var string */
+    protected $templatesFolder = '/';
 }
