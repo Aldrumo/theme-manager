@@ -11,7 +11,6 @@
     ],
     "require": {
         "php": "^7.3",
-        "aldrumo/theme-installer": "~2.0",
         "illuminate/support": "^8.0",
         "aldrumo/support": "^0.1"
     },
