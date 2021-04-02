@@ -21,6 +21,11 @@ class ThemeManagerServerProvider extends ServiceProvider
                 );
             }
         );
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/theme-manager.php',
+            'theme-manager'
+        );
     }
 
     /**
@@ -30,6 +35,11 @@ class ThemeManagerServerProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes(
+            [
+                __DIR__ . '/../config/theme-manager.php' => config_path('theme-manager.php'),
+            ],
+            'aldrumo'
+        );
     }
 }
