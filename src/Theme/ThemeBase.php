@@ -50,6 +50,16 @@ abstract class ThemeBase
         $this->serviceProvider->setViews($this->getPath() . $this->viewsPath . $this->templatesFolder);
     }
 
+    public function install() : void
+    {
+        //
+    }
+
+    public function uninstall() : void
+    {
+        //
+    }
+
     public function availableViews() : Collection
     {
         if ($this->availableViews === null) {
