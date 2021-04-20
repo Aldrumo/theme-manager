@@ -51,7 +51,7 @@ class ThemeManager
         return $this->activeTheme;
     }
 
-    public function installTheme(string $newTheme, ?string $oldTheme) : ?ThemeBase
+    public function installTheme(string $newTheme, ?string $oldTheme = null) : ?ThemeBase
     {
         if ($oldTheme !== null) {
             try {
@@ -71,6 +71,8 @@ class ThemeManager
         $theme->install();
 
         $this->activeTheme($newTheme);
+
+        return $theme;
     }
 
     public function availableThemes() : Collection

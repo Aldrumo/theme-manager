@@ -4,6 +4,7 @@ namespace Aldrumo\ThemeManager\Tests;
 
 use Aldrumo\ThemeManager\Exceptions\ActiveThemeNotSetException;
 use Aldrumo\ThemeManager\Exceptions\ThemeNotFoundException;
+use Aldrumo\ThemeManager\Tests\TestClasses\AnotherTheme;
 use Aldrumo\ThemeManager\Tests\TestClasses\AnotherThemeServiceProvider;
 use Aldrumo\ThemeManager\Tests\TestClasses\DefaultTheme;
 use Aldrumo\ThemeManager\Tests\TestClasses\DefaultThemeServiceProvider;
@@ -72,5 +73,51 @@ class ThemeManagerTest extends TestCase
         $themes = app(ThemeManager::class)->availableThemes();
 
         $this->assertEmpty($themes->toArray());
+    }
+
+    /** @test */
+    public function can_switch_theme()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activeTheme('DefaultTheme');
+
+        app(ThemeManager::class)->installTheme('AnotherTheme', 'DefaultTheme');
+
+        $this->assertInstanceOf(
+            AnotherTheme::class,
+            app(ThemeManager::class)->activeTheme()
+        );
+    }
+
+    /** @test */
+    public function can_install_theme()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->installTheme('AnotherTheme');
+
+        $this->assertInstanceOf(
+            AnotherTheme::class,
+            app(ThemeManager::class)->activeTheme()
+        );
+    }
+
+    /** @test */
+    public function install_theme_throws_exception_when_invalid_old_theme_set()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activeTheme('DefaultTheme');
+
+        $this->expectException(ThemeNotFoundException::class);
+        app(ThemeManager::class)->installTheme('AnotherTheme', 'ThemeDoesNotExist');
+    }
+
+    /** @test */
+    public function install_theme_throws_exception_when_invalid_new_theme_set()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activeTheme('DefaultTheme');
+
+        $this->expectException(ThemeNotFoundException::class);
+        app(ThemeManager::class)->installTheme('ThemeDoesNotExist', 'DefaultTheme');
     }
 }
