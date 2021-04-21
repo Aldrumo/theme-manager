@@ -4,6 +4,7 @@
 
 * Added install / uninstall methods to ThemeBase file. This can be used by your themes to auto publish and remove assets as a theme is installed
 * Added installTheme method to ThemeManager to run the install / uninstall methods on ThemeBase files and set active theme
+* Added `themeView()` helper method to replace `view()`. This simply auto prepends the active theme to the set view.
 
 ## [0.3.0 - 2021-04-03](https://github.com/Aldrumo/theme-manager/releases/tag/0.3.0)
 
