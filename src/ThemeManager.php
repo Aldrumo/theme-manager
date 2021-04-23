@@ -51,6 +51,30 @@ class ThemeManager
         return $this->activeTheme;
     }
 
+    public function installTheme(string $newTheme, ?string $oldTheme = null) : ?ThemeBase
+    {
+        if ($oldTheme !== null) {
+            try {
+                $oldTheme = resolve('theme:' . $oldTheme);
+            } catch (BindingResolutionException $e) {
+                throw new ThemeNotFoundException;
+            }
+            $oldTheme->uninstall();
+        }
+
+        try {
+            $theme = resolve('theme:' . $newTheme);
+        } catch (BindingResolutionException $e) {
+            throw new ThemeNotFoundException;
+        }
+
+        $theme->install();
+
+        $this->activeTheme($newTheme);
+
+        return $theme;
+    }
+
     public function availableThemes() : Collection
     {
         return collect(app()->tagged('aldrumo-theme'))
