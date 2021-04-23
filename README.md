@@ -27,10 +27,24 @@ A laravel theme package
     $themeBase = resolve(\Aldrumo\ThemeManager\ThemeManager::class)->activeTheme();
 ```
 
+```php
+    // runs uninstall on OldTheme ThemeBase file
+    // runs install on NewTheme ThemeBase file
+    // runs activeTheme for NewTheme  
+    resolve(\Aldrumo\ThemeManager\ThemeManager::class)->installTheme('NewTheme', 'OldTheme');
+```
+
 ### ThemeBase
 
 ```php
     $themeBase = resolve(\Aldrumo\ThemeManager\ThemeManager::class)->activeTheme();
 
     $viewsCollection = $themeBase->availableViews();
+```
+
+```php
+    $themeBase = resolve(\Aldrumo\ThemeManager\ThemeManager::class)->activeTheme();
+
+    $themeBase->install();
+    $themeBase->uninstall();
 ```
