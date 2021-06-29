@@ -60,6 +60,16 @@ abstract class ThemeBase
         //
     }
 
+    public function activate() : void
+    {
+        //
+    }
+
+    public function deactivate() : void
+    {
+        //
+    }
+
     public function availableViews() : Collection
     {
         if ($this->availableViews === null) {

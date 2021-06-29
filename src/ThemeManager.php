@@ -51,7 +51,7 @@ class ThemeManager
         return $this->activeTheme;
     }
 
-    public function installTheme(string $newTheme, ?string $oldTheme = null) : ?ThemeBase
+    public function activateTheme(string $newTheme, ?string $oldTheme = null) : ?ThemeBase
     {
         if ($oldTheme !== null) {
             try {
@@ -59,7 +59,7 @@ class ThemeManager
             } catch (BindingResolutionException $e) {
                 throw new ThemeNotFoundException;
             }
-            $oldTheme->uninstall();
+            $oldTheme->deactivate();
         }
 
         try {
@@ -68,11 +68,37 @@ class ThemeManager
             throw new ThemeNotFoundException;
         }
 
-        $theme->install();
+        $theme->activate();
 
         $this->activeTheme($newTheme);
 
         return $theme;
+    }
+
+    public function installTheme(string $theme) : ?ThemeBase
+    {
+        try {
+            $themeBase = resolve('theme:' . $theme);
+        } catch (BindingResolutionException $e) {
+            throw new ThemeNotFoundException;
+        }
+
+        $themeBase->install();
+
+        return $themeBase;
+    }
+
+    public function uninstallTheme(string $theme) : ?ThemeBase
+    {
+        try {
+            $themeBase = resolve('theme:' . $theme);
+        } catch (BindingResolutionException $e) {
+            throw new ThemeNotFoundException;
+        }
+
+        $themeBase->uninstall();
+
+        return $themeBase;
     }
 
     public function availableThemes() : Collection

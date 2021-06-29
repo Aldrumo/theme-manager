@@ -81,43 +81,67 @@ class ThemeManagerTest extends TestCase
         $this->bootThemes();
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
-        app(ThemeManager::class)->installTheme('AnotherTheme', 'DefaultTheme');
+        app(ThemeManager::class)->activateTheme('AnotherTheme', 'DefaultTheme');
 
         $this->assertInstanceOf(
             AnotherTheme::class,
             app(ThemeManager::class)->activeTheme()
         );
+    }
+
+    /** @test */
+    public function can_activate_theme()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activateTheme('AnotherTheme');
+
+        $this->assertInstanceOf(
+            AnotherTheme::class,
+            app(ThemeManager::class)->activeTheme()
+        );
+    }
+
+    /** @test */
+    public function activate_theme_throws_exception_when_invalid_old_theme_set()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activeTheme('DefaultTheme');
+
+        $this->expectException(ThemeNotFoundException::class);
+        app(ThemeManager::class)->activateTheme('AnotherTheme', 'ThemeDoesNotExist');
+    }
+
+    /** @test */
+    public function activate_theme_throws_exception_when_invalid_new_theme_set()
+    {
+        $this->bootThemes();
+        app(ThemeManager::class)->activeTheme('DefaultTheme');
+
+        $this->expectException(ThemeNotFoundException::class);
+        app(ThemeManager::class)->activateTheme('ThemeDoesNotExist', 'DefaultTheme');
     }
 
     /** @test */
     public function can_install_theme()
     {
         $this->bootThemes();
-        app(ThemeManager::class)->installTheme('AnotherTheme');
+        $theme = app(ThemeManager::class)->installTheme('AnotherTheme');
 
         $this->assertInstanceOf(
             AnotherTheme::class,
-            app(ThemeManager::class)->activeTheme()
+            $theme
         );
     }
 
     /** @test */
-    public function install_theme_throws_exception_when_invalid_old_theme_set()
+    public function can_uninstall_theme()
     {
         $this->bootThemes();
-        app(ThemeManager::class)->activeTheme('DefaultTheme');
+        $theme = app(ThemeManager::class)->uninstallTheme('AnotherTheme');
 
-        $this->expectException(ThemeNotFoundException::class);
-        app(ThemeManager::class)->installTheme('AnotherTheme', 'ThemeDoesNotExist');
-    }
-
-    /** @test */
-    public function install_theme_throws_exception_when_invalid_new_theme_set()
-    {
-        $this->bootThemes();
-        app(ThemeManager::class)->activeTheme('DefaultTheme');
-
-        $this->expectException(ThemeNotFoundException::class);
-        app(ThemeManager::class)->installTheme('ThemeDoesNotExist', 'DefaultTheme');
+        $this->assertInstanceOf(
+            AnotherTheme::class,
+            $theme
+        );
     }
 }
