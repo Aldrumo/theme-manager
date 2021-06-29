@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.4.0 - 2021-06-29](https://github.com/Aldrumo/theme-manager/releases/tag/0.4.0)
 
 * Added install / uninstall methods to ThemeBase file. These can be used by your themes to auto publish and remove assets as a theme is installed
 * Added installTheme / uninstallTheme method to ThemeManager to run the install / uninstall methods on ThemeBase files
