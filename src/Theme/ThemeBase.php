@@ -3,6 +3,7 @@
 namespace Aldrumo\ThemeManager\Theme;
 
 use Aldrumo\Support\Traits\CanGetPackageName;
+use Aldrumo\ThemeManager\Models\Theme;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -23,6 +24,12 @@ abstract class ThemeBase
 
     /** @var Collection */
     protected $availableViews;
+
+    /** @var bool */
+    protected $installed = null;
+
+    /** @var bool */
+    protected $active = null;
 
     /**
      * ThemeBase constructor.
@@ -87,6 +94,26 @@ abstract class ThemeBase
         return dirname(
             (new \ReflectionClass($this))->getFileName()
         );
+    }
+
+    public function isInstalled() : bool
+    {
+        if ($this->installed !== null) {
+            return $this->installed;
+        }
+
+        return $this->installed = Theme::where('name', $this->packageName())->exists();
+    }
+
+    public function isActive() : bool
+    {
+        if ($this->active !== null) {
+            return $this->active;
+        }
+
+        return $this->active = Theme::where('name', $this->packageName())
+            ->where('is_active', true)
+            ->exists();
     }
 
     protected function getViews($path)

@@ -21,7 +21,12 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        @if ($installed->where('name', $theme->packageName())->isNotEmpty())
+                        @if ($theme->isActive())
+                            <button class="p-2 bg-red-600 rounded-md text-white font-medium
+                                tracking-wide hover:bg-red-700 disabled:opacity-50 ..." disabled>
+                                {{ __('Uninstall Theme') }}
+                            </button>
+                        @elseif ($theme->isInstalled())
                             <button class="p-2 bg-red-600 rounded-md text-white font-medium
                                 tracking-wide hover:bg-red-700">
                                 {{ __('Uninstall Theme') }}
@@ -34,8 +39,8 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        @if ($installed->where('name', $theme->packageName())->isNotEmpty())
-                            @if ($installed->where('name', $theme->packageName())->pluck('is_active'))
+                        @if ($theme->isInstalled())
+                            @if ($theme->isActive())
                                 <button class="p-2 bg-green-600 rounded-md text-white font-medium
                                 tracking-wide hover:bg-green-700 disabled:opacity-50 ..." disabled>
                                     {{ __('Active Theme') }}

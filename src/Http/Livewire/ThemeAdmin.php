@@ -3,33 +3,20 @@
 namespace Aldrumo\ThemeManager\Http\Livewire;
 
 use Aldrumo\ThemeManager\Models\Theme;
+use Aldrumo\ThemeManager\ThemeManager;
 use Livewire\Component;
 
 class ThemeAdmin extends Component
 {
     public $themes;
-    public $installed;
 
-    public function mount()
+    public function mount(ThemeManager $manager)
     {
-        $this->discoverThemes();
-        $this->getInstalledThemes();
+        $this->themes = $manager->discoverThemes();
     }
 
     public function render()
     {
         return view('ThemeManager::livewire.theme-admin');
-    }
-
-    public function discoverThemes()
-    {
-        $this->themes = collect(app()->tagged('aldrumo-theme'));
-    }
-
-    public function getInstalledThemes()
-    {
-        $this->installed = Theme::orderBy('is_active', 'desc')
-            ->orderBy('name', 'asc')
-            ->get();
     }
 }

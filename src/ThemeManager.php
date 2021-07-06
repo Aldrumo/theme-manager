@@ -4,6 +4,7 @@ namespace Aldrumo\ThemeManager;
 
 use Aldrumo\ThemeManager\Exceptions\ActiveThemeNotSetException;
 use Aldrumo\ThemeManager\Exceptions\ThemeNotFoundException;
+use Aldrumo\ThemeManager\Models\Theme;
 use Aldrumo\ThemeManager\Theme\ThemeBase;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -103,11 +104,28 @@ class ThemeManager
 
     public function availableThemes() : Collection
     {
-        return collect(app()->tagged('aldrumo-theme'))
+        return $this->discoverThemes()
             ->map(
                 function ($item) {
                     return $item->packageName();
                 }
             );
+    }
+
+    public function discoverThemes() : Collection
+    {
+         return collect(app()->tagged('aldrumo-theme'));
+    }
+
+    public function getInstalledThemes() : Collection
+    {
+         return Theme::orderBy('is_active', 'desc')
+            ->orderBy('name', 'asc')
+            ->get()
+             ->mapWithKeys(
+                 function ($item) {
+                     return [$item->name => $item];
+                 }
+             );
     }
 }
