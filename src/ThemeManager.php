@@ -128,10 +128,10 @@ class ThemeManager
          return Theme::orderBy('is_active', 'desc')
             ->orderBy('name', 'asc')
             ->get()
-             ->mapWithKeys(
-                 function ($item) {
-                     return [$item->name => $item];
-                 }
-             );
+            ->mapWithKeys(
+                function ($item) {
+                    return [$item->name => $item];
+                }
+            );
     }
 }

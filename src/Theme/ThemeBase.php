@@ -33,7 +33,7 @@ abstract class ThemeBase
     /** @var bool */
     protected $active = null;
 
-    protected ?Theme $themeModel;
+    protected ?Theme $themeModel = null;
 
     /**
      * ThemeBase constructor.
@@ -83,15 +83,10 @@ abstract class ThemeBase
 
     public function install(): bool
     {
-        try {
-            $result = Theme::install($this);
-        } catch (ThemeAlreadyInstalledException $e) {
-            return true;
-        }
+        $result = Theme::install($this);
 
         if ($result) {
-            // @todo
-            // install callback
+            $this->installCallback();
             return true;
         }
 
@@ -100,17 +95,11 @@ abstract class ThemeBase
 
     public function uninstall(): bool
     {
-        try {
-            $model = $this->getModel();
-        } catch (ThemeNotInstalledException $e) {
-            return false;
-        }
-
+        $model = $this->getModel();
         $result = $model->uninstall();
 
         if ($result) {
-            // @todo
-            // uninstall callback
+            $this->uninstallCallback();
             return true;
         }
 
@@ -119,17 +108,11 @@ abstract class ThemeBase
 
     public function activate(): bool
     {
-        try {
-            $model = $this->getModel();
-        } catch (ThemeNotInstalledException $e) {
-            return false;
-        }
-
+        $model = $this->getModel();
         $result = $model->activate();
 
         if ($result) {
-            // @todo
-            // activate callback
+            $this->activateCallback();
             return true;
         }
 
@@ -138,17 +121,11 @@ abstract class ThemeBase
 
     public function deactivate(): bool
     {
-        try {
-            $model = $this->getModel();
-        } catch (ThemeNotInstalledException $e) {
-            return false;
-        }
-
+        $model = $this->getModel();
         $result = $model->deactivate();
 
         if ($result) {
-            // @todo
-            // deactivate callback
+            $this->deactivateCallback();
             return true;
         }
 

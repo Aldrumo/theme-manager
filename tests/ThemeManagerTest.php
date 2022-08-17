@@ -4,14 +4,18 @@ namespace Aldrumo\ThemeManager\Tests;
 
 use Aldrumo\ThemeManager\Exceptions\ActiveThemeNotSetException;
 use Aldrumo\ThemeManager\Exceptions\ThemeNotFoundException;
+use Aldrumo\ThemeManager\Exceptions\ThemeNotInstalledException;
 use Aldrumo\ThemeManager\Tests\TestClasses\AnotherTheme;
 use Aldrumo\ThemeManager\Tests\TestClasses\AnotherThemeServiceProvider;
 use Aldrumo\ThemeManager\Tests\TestClasses\DefaultTheme;
 use Aldrumo\ThemeManager\Tests\TestClasses\DefaultThemeServiceProvider;
 use Aldrumo\ThemeManager\ThemeManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ThemeManagerTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function bootThemes()
     {
         app()->register(DefaultThemeServiceProvider::class);
@@ -76,12 +80,11 @@ class ThemeManagerTest extends TestCase
     }
 
     /** @test */
-    public function can_switch_theme()
+    public function can_activate_theme()
     {
         $this->bootThemes();
-        app(ThemeManager::class)->activeTheme('DefaultTheme');
-
-        app(ThemeManager::class)->activateTheme('AnotherTheme', 'DefaultTheme');
+        app(ThemeManager::class)->installTheme('AnotherTheme');
+        app(ThemeManager::class)->activateTheme('AnotherTheme');
 
         $this->assertInstanceOf(
             AnotherTheme::class,
@@ -90,10 +93,15 @@ class ThemeManagerTest extends TestCase
     }
 
     /** @test */
-    public function can_activate_theme()
+    public function can_switch_theme()
     {
         $this->bootThemes();
-        app(ThemeManager::class)->activateTheme('AnotherTheme');
+        app(ThemeManager::class)->installTheme('DefaultTheme');
+        app(ThemeManager::class)->installTheme('AnotherTheme');
+
+        app(ThemeManager::class)->activateTheme('DefaultTheme');
+
+        app(ThemeManager::class)->activateTheme('AnotherTheme', 'DefaultTheme');
 
         $this->assertInstanceOf(
             AnotherTheme::class,
@@ -105,6 +113,8 @@ class ThemeManagerTest extends TestCase
     public function activate_theme_throws_exception_when_invalid_old_theme_set()
     {
         $this->bootThemes();
+        app(ThemeManager::class)->installTheme('DefaultTheme');
+        app(ThemeManager::class)->activateTheme('DefaultTheme');
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
         $this->expectException(ThemeNotFoundException::class);
@@ -117,7 +127,7 @@ class ThemeManagerTest extends TestCase
         $this->bootThemes();
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
-        $this->expectException(ThemeNotFoundException::class);
+        $this->expectException(ThemeNotInstalledException::class);
         app(ThemeManager::class)->activateTheme('ThemeDoesNotExist', 'DefaultTheme');
     }
 
@@ -137,7 +147,10 @@ class ThemeManagerTest extends TestCase
     public function can_uninstall_theme()
     {
         $this->bootThemes();
-        $theme = app(ThemeManager::class)->uninstallTheme('AnotherTheme');
+        $themeManager = app(ThemeManager::class);
+        $themeManager->installTheme('AnotherTheme');
+
+        $theme = $themeManager->uninstallTheme('AnotherTheme');
 
         $this->assertInstanceOf(
             AnotherTheme::class,
