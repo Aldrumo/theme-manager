@@ -4,6 +4,8 @@ namespace Aldrumo\ThemeManager;
 
 use Aldrumo\ThemeManager\Exceptions\ActiveThemeNotSetException;
 use Aldrumo\ThemeManager\Exceptions\ThemeNotFoundException;
+use Aldrumo\ThemeManager\Exceptions\ThemeNotInstalledException;
+use Aldrumo\ThemeManager\Exceptions\ThemeNotUninstalledException;
 use Aldrumo\ThemeManager\Models\Theme;
 use Aldrumo\ThemeManager\Theme\ThemeBase;
 use Illuminate\Contracts\Cache\Repository;
@@ -84,9 +86,11 @@ class ThemeManager
             throw new ThemeNotFoundException;
         }
 
-        $themeBase->install();
+        if ($themeBase->install()) {
+            return $themeBase;
+        }
 
-        return $themeBase;
+        throw new ThemeNotInstalledException();
     }
 
     public function uninstallTheme(string $theme) : ?ThemeBase
@@ -97,9 +101,11 @@ class ThemeManager
             throw new ThemeNotFoundException;
         }
 
-        $themeBase->uninstall();
+        if ($themeBase->uninstall()) {
+            return $themeBase;
+        }
 
-        return $themeBase;
+        throw new ThemeNotUninstalledException();
     }
 
     public function availableThemes() : Collection

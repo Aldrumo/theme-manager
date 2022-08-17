@@ -11,6 +11,9 @@ use Aldrumo\ThemeManager\Theme\ThemeBase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ItemNotFoundException;
 
+/**
+ * @property bool $is_active
+ */
 class Theme extends Model
 {
     protected $fillable = [
@@ -32,7 +35,7 @@ class Theme extends Model
         return app('Theme:' . $this->name);
     }
 
-    public function install(ThemeBase $theme): bool
+    public static function install(ThemeBase $theme): bool
     {
         $themeName = $theme->packageName('ServiceProvider');
 
@@ -55,21 +58,14 @@ class Theme extends Model
         return true;
     }
 
-    public function uninstall(ThemeBase $theme): bool
+    public function uninstall(): bool
     {
-        $themeName = $theme->packageName('ServiceProvider');
-
-        $model = Theme::where('name', $themeName)->first();
-        if ($model === null) {
-            throw new ThemeNotInstalledException();
-        }
-
-        if ($model->is_active) {
+        if ($this->is_active) {
             throw new CannotUninstallActiveThemeException();
         }
 
         try {
-            $model->delete();
+            $this->delete();
         } catch (\Exception $e) {
             return false;
         }
@@ -77,22 +73,15 @@ class Theme extends Model
         return true;
     }
 
-    public function activate(ThemeBase $theme): bool
+    public function activate(): bool
     {
-        $themeName = $theme->packageName('ServiceProvider');
-
-        $model = Theme::where('name', $themeName)->first();
-        if ($model === null) {
-            throw new ThemeNotInstalledException();
-        }
-
-        if ($model->is_active) {
+        if ($this->is_active) {
             throw new ThemeAlreadyActiveException();
         }
 
         try {
-            $model->is_active = true;
-            $model->save();
+            $this->is_active = true;
+            $this->save();
         } catch (\Exception $e) {
             return false;
         }
@@ -100,22 +89,15 @@ class Theme extends Model
         return true;
     }
 
-    public function deactivate(ThemeBase $theme): bool
+    public function deactivate(): bool
     {
-        $themeName = $theme->packageName('ServiceProvider');
-
-        $model = Theme::where('name', $themeName)->first();
-        if ($model === null) {
-            throw new ThemeNotInstalledException();
-        }
-
-        if (! $model->is_active) {
+        if (! $this->is_active) {
             throw new ThemeNotActiveException();
         }
 
         try {
-            $model->is_active = false;
-            $model->save();
+            $this->is_active = false;
+            $this->save();
         } catch (\Exception $e) {
             return false;
         }

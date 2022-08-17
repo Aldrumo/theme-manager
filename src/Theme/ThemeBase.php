@@ -3,6 +3,8 @@
 namespace Aldrumo\ThemeManager\Theme;
 
 use Aldrumo\Support\Traits\CanGetPackageName;
+use Aldrumo\ThemeManager\Exceptions\ThemeAlreadyInstalledException;
+use Aldrumo\ThemeManager\Exceptions\ThemeNotInstalledException;
 use Aldrumo\ThemeManager\Models\Theme;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -31,6 +33,8 @@ abstract class ThemeBase
     /** @var bool */
     protected $active = null;
 
+    protected ?Theme $themeModel;
+
     /**
      * ThemeBase constructor.
      * @param ThemeServiceProvider $serviceProvider
@@ -43,7 +47,7 @@ abstract class ThemeBase
     /**
      * Anything that would go in your service providers "register" method should go here
      */
-    public function register() : void
+    public function register(): void
     {
         //
     }
@@ -51,33 +55,107 @@ abstract class ThemeBase
     /**
      * Anything that would go in your service providers "boot" method should go here
      */
-    public function boot() : void
+    public function boot(): void
     {
         $this->serviceProvider->setViews($this->getPath() . $this->viewsPath);
         $this->serviceProvider->setViews($this->getPath() . $this->viewsPath . $this->templatesFolder);
     }
 
-    public function install() : void
+    public function installCallback(): void
     {
         //
     }
 
-    public function uninstall() : void
+    public function uninstallCallback(): void
     {
         //
     }
 
-    public function activate() : void
+    public function activateCallback(): void
     {
         //
     }
 
-    public function deactivate() : void
+    public function deactivateCallback(): void
     {
         //
     }
 
-    public function availableViews() : Collection
+    public function install(): bool
+    {
+        try {
+            $result = Theme::install($this);
+        } catch (ThemeAlreadyInstalledException $e) {
+            return true;
+        }
+
+        if ($result) {
+            // @todo
+            // install callback
+            return true;
+        }
+
+        return false;
+    }
+
+    public function uninstall(): bool
+    {
+        try {
+            $model = $this->getModel();
+        } catch (ThemeNotInstalledException $e) {
+            return false;
+        }
+
+        $result = $model->uninstall();
+
+        if ($result) {
+            // @todo
+            // uninstall callback
+            return true;
+        }
+
+        return false;
+    }
+
+    public function activate(): bool
+    {
+        try {
+            $model = $this->getModel();
+        } catch (ThemeNotInstalledException $e) {
+            return false;
+        }
+
+        $result = $model->activate();
+
+        if ($result) {
+            // @todo
+            // activate callback
+            return true;
+        }
+
+        return false;
+    }
+
+    public function deactivate(): bool
+    {
+        try {
+            $model = $this->getModel();
+        } catch (ThemeNotInstalledException $e) {
+            return false;
+        }
+
+        $result = $model->deactivate();
+
+        if ($result) {
+            // @todo
+            // deactivate callback
+            return true;
+        }
+
+        return false;
+    }
+
+    public function availableViews(): Collection
     {
         if ($this->availableViews === null) {
             $this->availableViews = collect([]);
@@ -89,31 +167,56 @@ abstract class ThemeBase
         return $this->availableViews;
     }
 
-    public function getPath() : string
+    public function getPath(): string
     {
         return dirname(
             (new \ReflectionClass($this))->getFileName()
         );
     }
 
-    public function isInstalled() : bool
+    public function isInstalled(): bool
     {
         if ($this->installed !== null) {
             return $this->installed;
         }
 
-        return $this->installed = Theme::where('name', $this->packageName())->exists();
+        try {
+            $this->getModel();
+        } catch (ThemeNotInstalledException $e) {
+            return $this->installed = false;
+        }
+
+        return $this->installed = true;
     }
 
-    public function isActive() : bool
+    public function isActive(): bool
     {
         if ($this->active !== null) {
             return $this->active;
         }
 
-        return $this->active = Theme::where('name', $this->packageName())
-            ->where('is_active', true)
-            ->exists();
+        try {
+            $model = $this->getModel();
+        } catch (ThemeNotInstalledException $e) {
+            return $this->active = false;
+        }
+
+        return $this->active = $model->is_active;
+    }
+
+    protected function getModel(): Theme
+    {
+        if ($this->themeModel !== null) {
+            return $this->themeModel;
+        }
+
+        $model = Theme::where('name', $this->packageName('ServiceProvider'))->first();
+
+        if ($model === null) {
+            throw new ThemeNotInstalledException();
+        }
+
+        return $this->themeModel = $model;
     }
 
     protected function getViews($path)
