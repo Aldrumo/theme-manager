@@ -19,6 +19,8 @@
                         <div class="leading-5 font-medium text-gray-900">
                             {{ $theme->packageName() }}
                         </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium leading-5 bg-green-100 text-green-800 hover:bg-green-800 hover:text-green-100">>Installed</span>
+                        <span>Active</span>
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                         @if ($theme->isActive())
