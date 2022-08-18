@@ -87,6 +87,7 @@ abstract class ThemeBase
 
         if ($result) {
             $this->installCallback();
+            $this->installed = true;
             return true;
         }
 
@@ -100,6 +101,7 @@ abstract class ThemeBase
 
         if ($result) {
             $this->uninstallCallback();
+            $this->installed = false;
             return true;
         }
 
@@ -113,6 +115,7 @@ abstract class ThemeBase
 
         if ($result) {
             $this->activateCallback();
+            $this->active = true;
             return true;
         }
 
@@ -126,6 +129,7 @@ abstract class ThemeBase
 
         if ($result) {
             $this->deactivateCallback();
+            $this->active = false;
             return true;
         }
 
