@@ -15,7 +15,7 @@
             @foreach ($themes as $theme)
                 <tr>
                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div class="leading-5 font-medium text-gray-900">
+                        <div class="leading-5 font-medium text-gray-900 mb-1">
                             {{ $theme->packageName() }}
                         </div>
                         @if ($theme->isInstalled())
@@ -38,7 +38,7 @@
                             </button>
                         @elseif ($theme->isInstalled())
                             <button class="p-2 bg-red-600 rounded-md text-white text-sm
-                            tracking-wide hover:bg-red-700">
+                            tracking-wide hover:bg-red-700" wire:click="uninstallTheme('{{$theme->packageName()}}')">
                                 {{ __('Uninstall') }}
                             </button>
 
@@ -48,7 +48,7 @@
                             </button>
                         @else
                             <button class="p-2 bg-green-600 rounded-md text-white text-sm
-                            tracking-wide hover:bg-green-700">
+                            tracking-wide hover:bg-green-700" wire:click="installTheme('{{$theme->packageName()}}')">
                                 {{ __('Install') }}
                             </button>
                         @endif

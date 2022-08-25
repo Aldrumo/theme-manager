@@ -83,9 +83,7 @@ abstract class ThemeBase
 
     public function install(): bool
     {
-        $result = Theme::install($this);
-
-        if ($result) {
+        if (Theme::install($this)) {
             $this->installCallback();
             $this->installed = true;
             return true;
@@ -97,9 +95,8 @@ abstract class ThemeBase
     public function uninstall(): bool
     {
         $model = $this->getModel();
-        $result = $model->uninstall();
 
-        if ($result) {
+        if ($model->uninstall()) {
             $this->uninstallCallback();
             $this->installed = false;
             return true;
@@ -111,9 +108,8 @@ abstract class ThemeBase
     public function activate(): bool
     {
         $model = $this->getModel();
-        $result = $model->activate();
 
-        if ($result) {
+        if ($model->activate()) {
             $this->activateCallback();
             $this->active = true;
             return true;
@@ -125,9 +121,8 @@ abstract class ThemeBase
     public function deactivate(): bool
     {
         $model = $this->getModel();
-        $result = $model->deactivate();
 
-        if ($result) {
+        if ($model->deactivate()) {
             $this->deactivateCallback();
             $this->active = false;
             return true;
