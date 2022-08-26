@@ -43,7 +43,7 @@
                             </button>
 
                             <button class="p-2 bg-green-600 rounded-md text-white text-sm
-                            tracking-wide hover:bg-green-700">
+                            tracking-wide hover:bg-green-700" wire:click="activateTheme('{{$theme->packageName()}}')">
                                 {{ __('Activate') }}
                             </button>
                         @else

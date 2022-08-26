@@ -25,14 +25,14 @@ class Theme extends Model
         'is_active' => 'boolean',
     ];
 
-    public static function getActive() : Theme
+    public static function getActive(): ?Theme
     {
         return static::where('is_active', 1)->first();
     }
 
     public function getThemeBase() : ThemeBase
     {
-        return app('Theme:' . $this->name);
+        return resolve('theme:' . $this->name);
     }
 
     public static function install(ThemeBase $theme): bool

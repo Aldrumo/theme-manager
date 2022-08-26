@@ -2,6 +2,7 @@
 
 namespace Aldrumo\ThemeManager\Http\Livewire;
 
+use Aldrumo\ThemeManager\Exceptions\ActiveThemeNotSetException;
 use Aldrumo\ThemeManager\Exceptions\CannotActivateTheme;
 use Aldrumo\ThemeManager\Exceptions\CannotUninstallActiveThemeException;
 use Aldrumo\ThemeManager\Exceptions\ThemeAlreadyActiveException;
@@ -89,7 +90,14 @@ class ThemeAdmin extends Component
     public function activateTheme(ThemeManager $manager, string $themeName)
     {
         try {
-            $theme = $manager->activateTheme($themeName);
+            $currentTheme = $manager->activeTheme();
+            $currentThemeName = $currentTheme->packageName('ServiceProvider');
+        } catch (ActiveThemeNotSetException $e) {
+            $currentThemeName = null;
+        }
+
+        try {
+            $theme = $manager->activateTheme($themeName, $currentThemeName);
         } catch (ThemeNotFoundException $e) {
             session()->flash(
                 'error',
