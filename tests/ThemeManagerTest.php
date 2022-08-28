@@ -117,7 +117,7 @@ class ThemeManagerTest extends TestCase
         app(ThemeManager::class)->activateTheme('DefaultTheme');
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
-        $this->expectException(ThemeNotFoundException::class);
+        $this->expectException(ThemeNotInstalledException::class);
         app(ThemeManager::class)->activateTheme('AnotherTheme', 'ThemeDoesNotExist');
     }
 
@@ -127,7 +127,7 @@ class ThemeManagerTest extends TestCase
         $this->bootThemes();
         app(ThemeManager::class)->activeTheme('DefaultTheme');
 
-        $this->expectException(ThemeNotInstalledException::class);
+        $this->expectException(ThemeNotFoundException::class);
         app(ThemeManager::class)->activateTheme('ThemeDoesNotExist', 'DefaultTheme');
     }
 
